@@ -1,15 +1,46 @@
-## Put comments here that give an overall description of what your
-## functions do
+# 
+#
+# #Matrix inversion is usually a costly computation and there may be some benefit to
+# caching the inverse of a matrix rather than compute it repeatedly (there are also 
+# alternatives to matrix inversion that we will not discuss here). 
+# Given assignment was to write a pair of functions that cache the inverse of a matrix.
 
-## Write a short comment describing this function
+# 1. makeCacheMatrix: This function creates a special "matrix" object that 
+#can cache its inverse.
 
-makeCacheMatrix <- function(x = matrix()) {
-
+makeCacheMatrix <- function(d = matrix ()){
+  inverseMatrix <- NULL #Set inverseMatrix to NULL
+  
+  set <- function (i){
+    d <<- i
+    inverseMatrix <<- NULL
+  }
+  
+  get <- function() d 
+  setInverse <- function(inverse) inverseMatrix <<- solve(d) #To calculate the Inverse
+  
+  getInverse <- function() inverseMatrix
+  
+  list(set = set,
+       get = get,
+       setInverse =setInverse,
+       getInverse = getInverse)
 }
 
+# # 2. cacheSolve: This function computes the inverse of the special "matrix" returned 
+# by makeCacheMatrix above. If the inverse has already been calculated (and the matrix 
+# has not changed), then the cachesolve should retrieve the inverse from the cache.
 
-## Write a short comment describing this function
-
-cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+cacheSolve <- function(x, ...){
+  inverseMatrix <-x$getInverse()
+  if(!is.null(inverseMatrix)){
+  message("Retrieving cached data!")
+  return(inverseMatrix) ## Return a matrix that is the inverse of 'x'
+  }
+  
+  storingData <- x$get()
+  inverseMatrix <- solve(storingData)
+  x$setInverse(inverseMatrix)
+  inverseMatrix
 }
+
